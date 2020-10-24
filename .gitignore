@@ -1,3 +1,7 @@
+# Ignore enviroment configuration file
+.env
+# Ignore NetBeans and PHPStorm files
 nbproject
 .idea
+# Ignore composer dependency files
 vendor
