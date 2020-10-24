@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Classes;
 
 /**
@@ -9,16 +8,13 @@ namespace App\Classes;
  */
 class Test
 {
-    protected String $word;
-
-    public function __construct(String $word)
+    public function test1($name)
     {
-        $this->word = $word;
-        $this->hello();
+        echo "I'm test one, ", $name;
     }
 
-    public function hello(): void
+    public function test2()
     {
-        echo 'Hello ' . $this->word;
+        echo "I'm test two!";
     }
 }
