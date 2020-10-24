@@ -1,0 +1,17 @@
+{
+    "name": "orch/router",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Moisés Mariano",
+            "email": "moisesduartem@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "OrchRouter\\": "bootstrap/"
+        }
+    }
+}
