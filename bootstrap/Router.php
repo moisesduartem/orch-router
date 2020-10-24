@@ -91,33 +91,40 @@ final class Router extends UrlHandler implements RouterInterface
         return preg_match('/(\{.+})/', $route['route']);
     }
 
-    protected function searchActualRoute(): void
+    private function find(array $route): bool
+    {
+        if ($this->routeHaveParams($route)) {
+            $route['route'] = preg_replace('/(\{.+})/', $this->getRouteUrlParam(), $route['route']);
+        }
+
+        return (
+                $this->getRouteUrl() == $route['route'] ||
+                $this->getRouteUrl() == $route['route'] . '/'
+            ) && substr($route['route'], -1) != '/';
+    }
+
+    private function searchActualRoute(): void
     {
         foreach ($this->getMethodAvailableRoutes() as $route)
-            {
-                if ($this->routeHaveParams($route)) {
-                    $route['route'] = preg_replace('/(\{.+})/', $this->getRouteUrlParam(), $route['route']);
-                }
-
-                $isCompatible = (
-                    $this->getRouteUrl() == $route['route'] ||
-                    $this->getRouteUrl() == $route['route'] . '/'
-                ) && substr($route['route'], -1) != '/';
-
-                if ($isCompatible) {
-                    $class = 'App\\Classes\\' . $route['callback']['className'];
-                    $instance = new $class();
-                    $instance->{$route['callback']['method']}(
-                        !($this->getRouteUrlParam() != null) ?: $this->getRouteUrlParam()
-                    );
-                    return ;
-                }
+        {
+            if ($this->find($route)) {
+                $class = $this->getNamespace() . $route['callback']['className'];
+                $instance = new $class();
+                $instance->{$route['callback']['method']}(
+                    !($this->getRouteUrlParam() != null) ?: $this->getRouteUrlParam()
+                );
+                return ;
             }
+        }
         throw new \Exception("Route doesn't exist.");
     }
 
     public function run(): void
     {
-        $this->searchActualRoute();
+        try {
+            $this->searchActualRoute();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }
