@@ -9,12 +9,14 @@ use App\Classes\Test;
  */
 final class Router extends UrlHandler implements RouterInterface
 {
-    protected $requestMethod;
+    private string $requestMethod;
 
-    protected array $get;
-    protected array $post;
-    protected array $put;
-    protected array $delete;
+    private string $namespace;
+
+    private array $get;
+    private array $post;
+    private array $put;
+    private array $delete;
 
     public function __construct(String $baseUrl)
     {
@@ -22,10 +24,31 @@ final class Router extends UrlHandler implements RouterInterface
         parent::__construct($baseUrl);
     }
 
+    public function namespace(string $namespace): void
+    {
+        $this->setNamespace($namespace);
+    }
+
+    /**
+     * @param string $namespace
+     */
+    private function setNamespace(string $namespace): void
+    {
+        $this->namespace = $namespace;
+    }
+
+    /**
+     * @return string
+     */
+    private function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
     /**
      * @param mixed $requestMethod
      */
-    public function setRequestMethod($requestMethod): void
+    private function setRequestMethod($requestMethod): void
     {
         $this->requestMethod = $requestMethod;
     }
@@ -33,7 +56,7 @@ final class Router extends UrlHandler implements RouterInterface
     /**
      * @return mixed
      */
-    public function getRequestMethod(): string
+    private function getRequestMethod(): string
     {
         return $this->requestMethod;
     }
@@ -58,12 +81,12 @@ final class Router extends UrlHandler implements RouterInterface
         $this->delete[] = ['route' => $route, 'callback' => $callback];
     }
 
-    protected function getMethodAvailableRoutes(): array
+    private function getMethodAvailableRoutes(): array
     {
         return $this->{strtolower($this->getRequestMethod())};
     }
 
-    protected function routeHaveParams(Array $route): bool
+    private function routeHaveParams(array $route): bool
     {
         return preg_match('/(\{.+})/', $route['route']);
     }
